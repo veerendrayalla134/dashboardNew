@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dashboard.apdpms.dto.ApdpmSystemByUnameAndDname;
 import com.dashboard.apdpms.dto.ApdpmSystemDTO;
+import com.dashboard.apdpms.dto.ApdpmSystemDistrictName;
+import com.dashboard.apdpms.dto.ApdpmSystemUda;
 import com.dashboard.apdpms.dto.OrganizeNameDto;
 import com.dashboard.apdpms.dto.ResultDTO;
 import com.dashboard.apdpms.dto.StateAggregateDto;
@@ -88,10 +91,42 @@ public class ApspmSytemController {
 	 
 
 
+	  @GetMapping("/aggregate-results/uda")
+	    public ResponseEntity<List<ApdpmSystemUda>> getUdaAggregateResults() {
+	        List<ApdpmSystemUda> results = apdpmSystemService.getUdaAggregateResults();
+	        if (results.isEmpty()) {
+	            // Return HTTP 204 No Content if there are no results
+	            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	        }
+	        // Return HTTP 200 OK with the list of results
+	        return new ResponseEntity<>(results, HttpStatus.OK);
+	    }
+	  
+	  
+	  
+	  @GetMapping("/aggregate-results/districts")
+	    public ResponseEntity<List<ApdpmSystemDistrictName>> getDistrictsAggregateResults() {
+	        List<ApdpmSystemDistrictName> results = apdpmSystemService.getDistrictsAggregateResults();
+	        return new ResponseEntity<>(results, HttpStatus.OK);
+	    }
+	  
+	 
+	  
+	  @GetMapping("/aggregate-results/district/uda/{dcode}")
+	    public ResponseEntity<List<ApdpmSystemByUnameAndDname>> getAggregateResults( @PathVariable("dcode")int dcode) {
+	        List<ApdpmSystemByUnameAndDname> results = apdpmSystemService.getUdaAndDistrictsAggregateResults(dcode);
+	        return ResponseEntity.ok(results);
+	    }
+	  
+	  
+	  
+	  
 	    @GetMapping("/{dcode}")
 	    public ResponseEntity<ApdpmSystemDTO> getApdpmSystem(@PathVariable Integer dcode) {
 	        return apdpmSystemService.getApdpmSystemById(dcode)
 	                .map(ResponseEntity::ok)
 	                .orElseGet(() -> ResponseEntity.notFound().build());
 	    }
+	    
+	    
 }

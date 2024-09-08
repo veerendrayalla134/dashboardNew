@@ -8,7 +8,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dashboard.apdpms.dto.ApdpmSystemByUnameAndDname;
 import com.dashboard.apdpms.dto.ApdpmSystemDTO;
+import com.dashboard.apdpms.dto.ApdpmSystemDistrictName;
+import com.dashboard.apdpms.dto.ApdpmSystemUda;
 import com.dashboard.apdpms.dto.OrganizeNameDto;
 import com.dashboard.apdpms.dto.ResultDTO;
 import com.dashboard.apdpms.dto.StateAggregateDto;
@@ -43,11 +46,7 @@ public class ApspmSytemServiceImpl   implements ApspmSytemService {
         boolean hasUdacode = dto.getUdacode() != null;
 
             Optional<ApdpmSystem> id=     repository.findById(dto.getUlbcode());
-                
-            if(id.isPresent()) {
-            	
-            }
-        
+          
         if (hasUlbcode) {
             // Insert a new record based on ulbcode
             // Check if a record with the given ulbcode already exists
@@ -166,4 +165,91 @@ public class ApspmSytemServiceImpl   implements ApspmSytemService {
 
 	        return dtos;
 	    }
+
+	@Override
+	 public List<ApdpmSystemUda> getUdaAggregateResults() {
+        List<Object[]> results = repository.getUdaAggregateResults();
+        List<ApdpmSystemUda> dtos = new ArrayList<>();
+
+        for (Object[] result : results) {
+            Double bpapproved = ((Number) result[0]).doubleValue();
+            Double bpsitearea = ((Number) result[1]).doubleValue();
+            Double bpbua = ((Number) result[2]).doubleValue();
+            Double bpgreenfeelabour = ((Number) result[3]).doubleValue();
+            Double bpamtcollected = ((Number) result[4]).doubleValue();
+            Double bptotalamt = ((Number) result[5]).doubleValue();
+            Double layoutapproved = ((Number) result[6]).doubleValue();
+            Double layoutsitearea = ((Number) result[7]).doubleValue();
+            Double layoutamt = ((Number) result[8]).doubleValue();
+            Double occupancyapproved = ((Number) result[9]).doubleValue();
+            Double occupancygreenfee = ((Number) result[10]).doubleValue();
+            Double occupancyamtcollected = ((Number) result[11]).doubleValue();
+
+            ApdpmSystemUda dto = new ApdpmSystemUda(bpapproved, bpsitearea, bpbua, bpgreenfeelabour,
+                                                    bpamtcollected, bptotalamt, layoutapproved,
+                                                    layoutsitearea, layoutamt, occupancyapproved,
+                                                    occupancygreenfee, occupancyamtcollected);
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+	@Override
+	 public List<ApdpmSystemDistrictName> getDistrictsAggregateResults() {
+        List<Object[]> results = repository.getBuildingLayoutDistrictsAggregateResults();
+        List<ApdpmSystemDistrictName> dtos = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String dname = (String) result[0];
+            Double bpapproved = ((Number) result[1]).doubleValue();
+            Double bpsitearea = ((Number) result[2]).doubleValue();
+            Double bpbua = ((Number) result[3]).doubleValue();
+            Double bpgreenfeelabour = ((Number) result[4]).doubleValue();
+            Double bpamtcollected = ((Number) result[5]).doubleValue();
+            Double bptotalamt = ((Number) result[6]).doubleValue();
+            Double layoutapproved = ((Number) result[7]).doubleValue();
+            Double layoutsitearea = ((Number) result[8]).doubleValue();
+            Double layoutamt = ((Number) result[9]).doubleValue();
+            Double occupancyapproved = ((Number) result[10]).doubleValue();
+            Double occupancygreenfee = ((Number) result[11]).doubleValue();
+            Double occupancyamtcollected = ((Number) result[12]).doubleValue();
+
+            ApdpmSystemDistrictName dto = new ApdpmSystemDistrictName(dname, bpapproved, bpsitearea, bpbua,
+                                                                            bpgreenfeelabour, bpamtcollected, bptotalamt,
+                                                                            layoutapproved, layoutsitearea, layoutamt,
+                                                                            occupancyapproved, occupancygreenfee, occupancyamtcollected);
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+	@Override
+	public List<ApdpmSystemByUnameAndDname> getUdaAndDistrictsAggregateResults(int dcode) {
+        List<Object[]> results = repository.getBuildingLayoutUdaAndDistrictggregateResults(dcode);
+        List<ApdpmSystemByUnameAndDname> dtos = new ArrayList<>();
+
+        for (Object[] result : results) {
+            String dname = (String) result[0];
+            String parentUdaName = (String) result[1];
+            Double bpapproved = ((Number) result[2]).doubleValue();
+            Double bpsitearea = ((Number) result[3]).doubleValue();
+            Double bpbua = ((Number) result[4]).doubleValue();
+            Double bpgreenfeelabour = ((Number) result[5]).doubleValue();
+            Double bpamtcollected = ((Number) result[6]).doubleValue();
+            Double bptotalamt = ((Number) result[7]).doubleValue();
+            Double layoutapproved = ((Number) result[8]).doubleValue();
+            Double layoutsitearea = ((Number) result[9]).doubleValue();
+            Double layoutamt = ((Number) result[10]).doubleValue();
+            Double occupancyapproved = ((Number) result[11]).doubleValue();
+            Double occupancygreenfee = ((Number) result[12]).doubleValue();
+            Double occupancyamtcollected = ((Number) result[13]).doubleValue();
+
+            ApdpmSystemByUnameAndDname dto = new ApdpmSystemByUnameAndDname(dname, parentUdaName, bpapproved, bpsitearea, bpbua,
+                                                                              bpgreenfeelabour, bpamtcollected, bptotalamt,
+                                                                              layoutapproved, layoutsitearea, layoutamt,
+                                                                              occupancyapproved, occupancygreenfee, occupancyamtcollected);
+            dtos.add(dto);
+        }
+        return dtos;
+    }
 }
